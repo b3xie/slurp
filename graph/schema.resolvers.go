@@ -9,23 +9,30 @@ import (
 	"fmt"
 
 	"github.com/b3xie/slurp/graph/model"
+	"github.com/b3xie/slurp/internal"
 )
+
+// CreateUser is the resolver for the createUser field.
+func (r *mutationResolver) CreateUser(ctx context.Context, input *model.NewUser) (*model.Message, error) {
+	res, err := internal.CreateUser(ctx, *input)
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
+}
 
 // Messsage is the resolver for the messsage field.
 func (r *queryResolver) Messsage(ctx context.Context, input model.User) ([]*model.Message, error) {
-	pr := input.ID
-	println(pr)
 	return nil, nil
 }
 
-// CreateUser is the resolver for the createUser field.
-func (r *queryResolver) CreateUser(ctx context.Context, input *model.NewUser) (*model.Message, error) {
-	panic(fmt.Errorf("not implemented: CreateUser - createUser"))
-}
+// Mutation returns MutationResolver implementation.
+func (r *Resolver) Mutation() MutationResolver { return &mutationResolver{r} }
 
 // Query returns QueryResolver implementation.
 func (r *Resolver) Query() QueryResolver { return &queryResolver{r} }
 
+type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
 
 // !!! WARNING !!!
@@ -37,5 +44,3 @@ type queryResolver struct{ *Resolver }
 func (r *queryResolver) Todos(ctx context.Context) ([]*model.Message, error) {
 	panic(fmt.Errorf("not implemented: Todos - todos"))
 }
-
-type mutationResolver struct{ *Resolver }

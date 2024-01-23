@@ -2,6 +2,12 @@
 
 package model
 
+type CreateChannel struct {
+	Name   string `json:"name"`
+	Owner  string `json:"owner"`
+	Public bool   `json:"public"`
+}
+
 type Login struct {
 	Username string `json:"username"`
 	Secret   string `json:"secret"`
@@ -10,6 +16,9 @@ type Login struct {
 type Message struct {
 	ID   string `json:"id"`
 	Text string `json:"text"`
+}
+
+type Mutation struct {
 }
 
 type NewUser struct {
@@ -21,5 +30,6 @@ type Query struct {
 }
 
 type User struct {
-	ID string `json:"id"`
+	Username string `json:"username"`
+	Secret   string `json:"secret"`
 }

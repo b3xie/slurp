@@ -3,29 +3,23 @@ package internal
 import (
 	"context"
 	"crypto/sha256"
-	"fmt"
+	"errors"
 
 	model "github.com/b3xie/slurp/graph/model"
 )
 
-func UserIDMake() uint {
-
-	return 0
-}
-func CreateUser(ctx context.Context, userInfo model.NewUser) {
+func CreateUser(ctx context.Context, userInfo model.NewUser) (*model.Message, error) {
 	rdb := RedisConnect()
-	userLen := func() (int64, map[string]string) {
-		len := rdb.HLen(ctx, "users").Val()
-		usr := rdb.HGetAll(ctx, "users").Val()
-		return len, usr
-	}
-	_, usr := userLen()
-	for i, e := range usr {
-		fmt.Printf(e)
-		fmt.Printf(i)
+	exists := rdb.HExists(ctx, "users", userInfo.Username)
+	if exists.Val() {
+		return nil, errors.New("user already exists")
 	}
 	sum := sha256.Sum256([]byte(string(userInfo.Secret)))
 	hashString := string(sum[:])
 	rdb.HSet(ctx, "users", []string{string(userInfo.Username), hashString})
-
+	var reply model.Message
+	reply.ID = "200 - ok"
+	reply.Text = "User created"
+	var res *model.Message = &reply
+	return res, nil
 }

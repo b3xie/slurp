@@ -7,7 +7,8 @@ type Message {
   text: String!
 }
 input User {
-  id: ID!
+  username: String!
+  secret: String!
 }
 input Login {
   username: String!
@@ -17,7 +18,14 @@ input NewUser {
   username: String!
   secret: String!
 }
+input CreateChannel {
+  name: String!
+  owner: String!
+  public: Boolean!
+}
 type Query {
   messsage(input: User!): [Message]!
+}
+type Mutation {
   createUser(input: NewUser): Message!
 }
